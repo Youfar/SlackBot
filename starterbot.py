@@ -1,5 +1,6 @@
 import os
 import time
+import ormTest
 import logging
 from slackclient import SlackClient
 # starterbot 的 ID 作为一个环境变量
@@ -18,7 +19,16 @@ def handle_command(command, channel):
     response = "Not sure what you mean. Use the *" + EXAMPLE_COMMAND + \
                "* command with numbers, delimited by spaces."
     if command.startswith(EXAMPLE_COMMAND):
-        response = "Sure...write some more code then I can do that!"
+        if ("save" in command):
+            commands = command.split()
+            ormTest.sql_save(commands[2])
+            response = "Save success"
+        elif ("get" in command):
+            commands = command.split()
+            response = ormTest.sql_select(commands[2])
+        else:
+            response = "Sure...write some more code then I can do that!"
+        # response = "Sure...write some more code then I can do that!"
     slack_client.api_call("chat.postMessage", channel=channel,
                           text=response, as_user=True)
 def parse_slack_output(slack_rtm_output):

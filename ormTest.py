@@ -21,20 +21,50 @@ class User(Base):
     # 表的结构:
     id = Column(Integer,primary_key=True,autoincrement=True)
     name = Column(String(20))
-# 初始化数据库连接:
-engine = create_engine('mysql+mysqlconnector://root:@localhost:3306/botTestDB')
-# 创建DBSession类型:
-DBSession = sessionmaker(bind=engine)
-# 创建session对象:
-session = DBSession()
-# 创建新User对象:
-new_user = User(name='Tom')
-# 添加到session:
-session.add(new_user)
-# 提交即保存到数据库:
-session.commit()
-# 关闭session:
-session.close()
+
+def sql_save(name_input):
+    # 初始化数据库连接:
+    engine = create_engine('mysql+mysqlconnector://root:@localhost:3306/botTestDB')
+    # 创建DBSession类型:
+    DBSession = sessionmaker(bind=engine)
+    # 创建session对象:
+    session = DBSession()
+    # 创建新User对象:
+    new_user = User(name=name_input)
+    # 添加到session:
+    session.add(new_user)
+    # 提交即保存到数据库:
+    session.commit()
+    # 关闭session:
+    session.close()
+
+def sql_select(id_input):
+    engine = create_engine('mysql+mysqlconnector://root:@localhost:3306/botTestDB')
+    # 创建DBSession类型:
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+# 创建Query查询，filter是where条件，最后调用one()返回唯一行，如果调用all()则返回所有行:
+    user = session.query(User).filter(User.id==id_input).one()
+    return user.name
+
+# 关闭Session:
+# session.close()
+# # 初始化数据库连接:
+# engine = create_engine('mysql+mysqlconnector://root:@localhost:3306/botTestDB')
+# # 创建DBSession类型:
+# DBSession = sessionmaker(bind=engine)
+# # 创建session对象:
+# session = DBSession()
+# # 创建新User对象:
+# new_user = User(name='Tom')
+# # 添加到session:
+# session.add(new_user)
+# # 提交即保存到数据库:
+# session.commit()
+# # 关闭session:
+# session.close()
+
+
 # 创建Session:
 # session = DBSession()
 # # 创建Query查询，filter是where条件，最后调用one()返回唯一行，如果调用all()则返回所有行:
